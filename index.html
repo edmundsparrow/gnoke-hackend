@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Gnoke Hackend</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:  #1e3a8a;
+      --bg:      #f0f4ff;
+      --text:    #0f172a;
+      --muted:   #64748b;
+      --surface: #ffffff;
+      --eye-glow: #00ff88;
+      --font-sans:    'DM Sans', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+      --font-display: 'Playfair Display', serif;
+    }
+    [data-theme="dark"] {
+      --bg:      #060d1f;
+      --text:    #e2e8f8;
+      --surface: #101d38;
+      --eye-glow: #ccff00;
+    }
+
+    body {
+      width: 100%; height: 100dvh;
+      background: var(--bg); color: var(--text);
+      font-family: var(--font-sans);
+      overflow: hidden;
+    }
+
+    .page {
+      height: 100%;
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      padding: 60px 30px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .top { text-align: left; }
+    .gnoke-label {
+      font-family: var(--font-mono); font-size: .75rem;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--accent);
+    }
+    .app-name {
+      font-family: var(--font-display); font-size: 3rem;
+      font-weight: 700; line-height: 1; margin-top: 4px;
+    }
+
+    .mid { 
+      flex: 1; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      gap: 24px;
+      align-items: center;
+    }
+
+    /* Skull & Eye Animation Logic */
+    .skull-wrap {
+      position: relative;
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .eye {
+      position: absolute;
+      top: 41%;
+      width: 8px;
+      height: 8px;
+      background: var(--eye-glow);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--eye-glow), 0 0 20px var(--eye-glow);
+      animation: pulse 2s infinite ease-in-out;
+    }
+    .eye.left { left: 27%; }
+    .eye.right { right: 27%; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; filter: blur(1px); }
+      50% { transform: scale(1.3); opacity: 1; filter: blur(0px); }
+    }
+
+    .splash-sub {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: var(--muted);
+      text-align: center;
+    }
+    .splash-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+    .pillar {
+      background: var(--surface);
+      padding: 16px 8px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .pillar span:first-child { font-size: 1.5rem; }
+    .pillar span:last-child { 
+      font-family: var(--font-mono); 
+      font-size: 0.65rem; 
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .bottom {
+      display: flex; flex-direction: column; gap: 20px;
+      align-items: center;
+    }
+    .enter-btn {
+      width: 100%; padding: 20px;
+      background: var(--accent); color: #fff;
+      font-size: 1rem; font-weight: 600;
+      border-radius: 12px; text-decoration: none;
+      text-align: center;
+      transition: opacity .2s;
+    }
+    .enter-btn:active { opacity: .8; }
+
+    .skip-row {
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer;
+    }
+    .skip-row input { accent-color: var(--accent); }
+    .skip-row span {
+      font-family: var(--font-mono); font-size: .65rem;
+      text-transform: uppercase; color: var(--muted);
+      letter-spacing: .05em;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top">
+    <div class="gnoke-label">Gnoke</div>
+    <div class="app-name">Hackend</div>
+  </div>
+
+  <div class="mid">
+    <div class="skull-wrap">
+      💀
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+    </div>
+
+    <p class="splash-sub">Portable backend configuration tool</p>
+    
+    <div class="splash-pillars">
+      <div class="pillar">
+        <span>🔌</span>
+        <span>Adapters</span>
+      </div>
+      <div class="pillar">
+        <span>🔐</span>
+        <span>Security</span>
+      </div>
+      <div class="pillar">
+        <span>📦</span>
+        <span>Export</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <a class="enter-btn" href="main/" id="launch-btn">
+      Open Config
+    </a>
+    <label class="skip-row" for="skip">
+      <input type="checkbox" id="skip" />
+      <span>Don't show again</span>
+    </label>
+  </div>
+</div>
+
+<script>
+  const KEY = 'gnoke_hackend_skip_intro';
+  
+  if (localStorage.getItem('gnoke_hackend_theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+
+  if (localStorage.getItem(KEY) === 'true') {
+    window.location.replace('main/');
+  }
+
+  document.getElementById('launch-btn').addEventListener('click', (e) => {
+    if (document.getElementById('skip').checked) {
+      localStorage.setItem(KEY, 'true');
+    }
+  });
+</script>
+
+</body>
+</html>
