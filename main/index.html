@@ -1,1 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gnoke-Hackend</title>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="stylesheet" href="../style.css" />
+  <script>
+    (function() {
+      if (localStorage.getItem('gnoke_hackend_theme') === 'dark')
+        document.documentElement.classList.add('dark');
+    })();
+  </script>
+</head>
+<body>
 
+  <div id="loading-overlay">
+    <div class="dots-loader"><span></span><span></span><span></span></div>
+    <p>Initialising…</p>
+  </div>
+
+  <div id="topbar">
+    <button id="hamburger" class="icon-btn" aria-label="Menu">&#9776;</button>
+    <div class="brand">
+      <span class="brand-icon">💀</span>
+      <span class="brand-name">Gnoke<strong>Hackend</strong></span>
+    </div>
+    <div class="context-info" id="context-info"></div>
+    <span id="topbar-appname" class="topbar-appname"></span>
+    <span id="maintenance-badge" class="badge badge-danger" style="display:none;">⚠ Maintenance</span>
+    <div class="spacer"></div>
+    <div class="menu-group" id="desktop-nav">
+      <button class="nav-btn active" data-page="backend">Backend</button>
+      <button class="nav-btn" data-page="security">Security</button>
+      <button class="nav-btn" data-page="identity">Identity</button>
+      <button class="nav-btn" data-page="settings">Settings</button>
+      <button class="nav-btn" data-page="export">Export</button>
+    </div>
+    <div class="topbar-right">
+      <span id="env-badge" class="env-badge" style="display:none;"></span>
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">◑</button>
+    </div>
+  </div>
+
+  <main class="pages">
+
+    <!-- PAGE: BACKEND -->
+    <section id="page-backend" class="page active">
+      <div class="page-header">
+        <h1>Backend</h1>
+        <p class="page-sub">Configure your storage adapter</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-icon">🔌</span>
+          <h2>Adapter</h2>
+        </div>
+        <div class="field-group">
+          <label for="adapter-select">Storage Type</label>
+          <select id="adapter-select">
+            <option value="php">PHP File / API</option>
+            <option value="sql">SQL (MySQL / SQLite)</option>
+            <option value="sheets">Google Sheets</option>
+            <option value="python">Python (FastAPI/Flask)</option>
+            <option value="node">Node.js (Express)</option>
+       </select>
+          
+      </div>
+        <div id="adapter-fields"></div>
+        <div class="card-actions">
+          <button id="btn-test-connection" class="btn-secondary">Test Connection</button>
+          <button id="btn-save-backend" class="btn-primary">Save</button>
+        </div>
+      </div>
+
+      <div class="card" id="flatjson-preview-card" style="display:none;">
+        <div class="card-head">
+          <span class="card-icon">📋</span>
+          <h2>FlatJSON Preview</h2>
+          <span class="badge badge-success" id="flatjson-status"></span>
+        </div>
+        <div id="flatjson-table-wrap"></div>
+      </div>
+    </section>
+
+    <!-- PAGE: SECURITY -->
+    <section id="page-security" class="page">
+      <div class="page-header">
+        <h1>Security</h1>
+        <p class="page-sub">Define roles and access policy</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-icon">🔐</span>
+          <h2>Roles</h2>
+          <button id="btn-add-role" class="btn-ghost btn-sm">+ Add Role</button>
+        </div>
+        <div id="roles-list"><p class="muted-hint">No roles defined yet.</p></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-icon">🛡</span>
+          <h2>Policy</h2>
+        </div>
+        <div class="field-group toggle-row">
+          <label for="policy-readonly">Read-only mode</label>
+          <label class="toggle">
+            <input type="checkbox" id="policy-readonly" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="field-group toggle-row">
+          <label for="policy-require-auth">Require authentication</label>
+          <label class="toggle">
+            <input type="checkbox" id="policy-require-auth" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="field-group toggle-row">
+          <label for="policy-offline">Allow offline access</label>
+          <label class="toggle">
+            <input type="checkbox" id="policy-offline" checked />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div class="card-actions">
+          <button id="btn-save-security" class="btn-primary">Save Security</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: IDENTITY -->
+    <section id="page-identity" class="page">
+      <div class="page-header">
+        <h1>Identity</h1>
+        <p class="page-sub">App name and maintenance mode</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon">🏷</span><h2>App Name</h2></div>
+        <div class="field-group">
+          <label for="identity-appname">Display Name</label>
+          <input type="text" id="identity-appname" placeholder="e.g. Wells Courier Backend" />
+        </div>
+        <div class="card-actions">
+          <button id="btn-save-identity" class="btn-primary">Save</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon">🚧</span><h2>Maintenance Mode</h2></div>
+        <div class="field-group toggle-row">
+          <label for="identity-maintenance">System Offline (503)</label>
+          <label class="toggle">
+            <input type="checkbox" id="identity-maintenance" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <p class="field-hint">When ON, clients fetching this manifest will receive a maintenance signal and should block data entry.</p>
+      </div>
+    </section>
+
+    <!-- PAGE: SETTINGS -->
+    <section id="page-settings" class="page">
+      <div class="page-header">
+        <h1>Settings</h1>
+        <p class="page-sub">Environment, limits and audit options</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon">🌐</span><h2>Environment</h2></div>
+        <div class="field-group">
+          <label for="settings-env">Current Environment</label>
+          <select id="settings-env">
+            <option value="development">Development</option>
+            <option value="staging">Staging</option>
+            <option value="production">Production</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon">📄</span><h2>Data Limits</h2></div>
+        <div class="field-group">
+          <label for="settings-limit">Max Rows Per Request</label>
+          <input type="number" id="settings-limit" min="1" max="1000" value="50" />
+          <p class="field-hint">Prevents UI overload when data grows. Applied to all adapter fetches.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon">🕓</span><h2>Audit Stamps</h2></div>
+        <div class="field-group toggle-row">
+          <label for="settings-audit">Auto-append created_at / updated_at</label>
+          <label class="toggle">
+            <input type="checkbox" id="settings-audit" />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-icon">🔖</span><h2>Version Tag</h2></div>
+        <div class="field-group">
+          <label for="settings-version">Manifest Version</label>
+          <input type="text" id="settings-version" placeholder="e.g. 1.1.0" value="1.0.0" />
+        </div>
+        <div class="card-actions">
+          <button id="btn-save-settings" class="btn-primary">Save</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: EXPORT -->
+    <section id="page-export" class="page">
+      <div class="page-header">
+        <h1>Export</h1>
+        <p class="page-sub">Review and download your config manifest</p>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-icon">📦</span>
+          <h2>Manifest</h2>
+          <span class="badge" id="manifest-version-badge">v1</span>
+        </div>
+        <pre id="manifest-preview" class="code-preview">// Save your config to generate manifest</pre>
+        <div class="card-actions">
+          <button id="btn-copy-manifest" class="btn-secondary">Copy JSON</button>
+          <button id="btn-download-manifest" class="btn-primary">Download .json</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: ADD ROLE -->
+  <div class="modal-overlay" id="modal-add-role">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>Add Role</h3>
+        <button onclick="UI.closeModal('modal-add-role')" class="icon-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label for="role-name-input">Role Name</label>
+          <input type="text" id="role-name-input" placeholder="e.g. admin, viewer, editor" />
+        </div>
+        <div class="field-group">
+          <label>Permissions</label>
+          <div class="checkbox-group" id="role-perms">
+            <label><input type="checkbox" value="read" /> Read</label>
+            <label><input type="checkbox" value="write" /> Write</label>
+            <label><input type="checkbox" value="delete" /> Delete</label>
+            <label><input type="checkbox" value="admin" /> Admin</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button onclick="UI.closeModal('modal-add-role')" class="btn-ghost">Cancel</button>
+        <button id="btn-confirm-add-role" class="btn-primary">Add Role</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <div id="drawer-overlay"></div>
+  <div id="drawer">
+    <div class="drawer-head">
+      <span class="brand-name">Gnoke<strong>Hackend</strong></span>
+      <button id="drawer-close" class="icon-btn">✕</button>
+    </div>
+    <nav class="drawer-nav">
+      <button class="nav-btn active" data-page="backend">⚙ Backend</button>
+      <button class="nav-btn" data-page="security">🔐 Security</button>
+      <button class="nav-btn" data-page="identity">🏷 Identity</button>
+      <button class="nav-btn" data-page="settings">⚙ Settings</button>
+      <button class="nav-btn" data-page="export">📦 Export</button>
+    </nav>
+  </div>
+
+  <script src="../js/state.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/ui.js"></script>
+  <script src="../js/gnoke-flatjson.js"></script>
+<script src="../scripts/php.js"></script>
+<script src="../scripts/sql.js"></script>
+<script src="../scripts/sheets.js"></script>
+<script src="../scripts/python.js"></script> 
+  <script src="../scripts/node.js"></script>
+  <script src="../security/roles.js"></script>
+  <script src="../js/identity.js"></script>
+  <script src="../js/settings.js"></script>
+  <script src="../js/gnoke-contract.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>
