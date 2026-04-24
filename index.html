@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Gnoke Hackend</title>
+  <title>Gnoke-Hackend</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#1a1a2e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Hackend" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -65,7 +73,6 @@
       align-items: center;
     }
 
-    /* Skull & Eye Animation Logic */
     .skull-wrap {
       position: relative;
       font-size: 5rem;
@@ -192,7 +199,7 @@
 
 <script>
   const KEY = 'gnoke_hackend_skip_intro';
-  
+
   if (localStorage.getItem('gnoke_hackend_theme') === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
   }
@@ -201,11 +208,18 @@
     window.location.replace('main/');
   }
 
-  document.getElementById('launch-btn').addEventListener('click', (e) => {
+  document.getElementById('launch-btn').addEventListener('click', () => {
     if (document.getElementById('skip').checked) {
       localStorage.setItem(KEY, 'true');
     }
   });
+
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
 </script>
 
 </body>

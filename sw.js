@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gnoke-config-v1';
+const CACHE_NAME = 'gnoke-hackend-v1';
 const ASSETS = [
   './',
   './index.html',
@@ -9,14 +9,16 @@ const ASSETS = [
   './js/theme.js',
   './js/ui.js',
   './js/gnoke-flatjson.js',
+  './js/gnoke-contract.js',
+  './js/identity.js',
+  './js/settings.js',
   './js/app.js',
   './scripts/php.js',
   './scripts/sql.js',
   './scripts/sheets.js',
-  './security/roles.js',
-  './js/identity.js',
-  './js/settings.js',
-  './js/gnoke-contract.js'
+  './scripts/python.js',
+  './scripts/node.js',
+  './security/roles.js'
 ];
 
 self.addEventListener('install',  e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))));
